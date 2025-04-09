@@ -122,7 +122,6 @@ export default function App() {
   return (
     <Flex direction="column" my={{ md: 6 }}>
       <Flex gap={4} px={4} mb={6} flexWrap="wrap" justify="center">
-      <h2>{t("hello_world")}</h2>
         {Object.entries(filterOptions).map(([key, options]) => (
           <Box as="label" key={key}>
             <select
