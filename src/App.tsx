@@ -70,7 +70,9 @@ export default function App() {
           variables: { ...variables, page: data.characters.info.next },
           updateQuery: (prev, { fetchMoreResult }) => {
             setIsFetchingMore(false);
-            if (!fetchMoreResult) return prev;
+            if (!fetchMoreResult) {
+              return prev;
+            }
             return {
               characters: {
                 ...prev.characters,
@@ -86,9 +88,13 @@ export default function App() {
   }, [loading, data, fetchMore, variables]);
 
   const sortedResults = useMemo(() => {
-    if (!data?.characters.results) return [];
+    if (!data?.characters.results) {
+      return [];
+    }
     const sorted = [...data.characters.results];
-    if (filters.sort === 'origin') return sorted.sort((a, b) => a.origin.name.localeCompare(b.origin.name));
+    if (filters.sort === 'origin') {
+      return sorted.sort((a, b) => a.origin.name.localeCompare(b.origin.name));
+    }
     if (filters.sort === 'name') return sorted.sort((a, b) => a.name.localeCompare(b.name));
     return sorted;
   }, [data, filters.sort]);
@@ -107,7 +113,7 @@ export default function App() {
     return (
       <Flex justify="center" align="center">
         <Text fontSize="xl" color="red.400" textAlign="center" maxW="320px">
-          Oops! Something went wrong. Please try again later.
+          Something went wrong with fetching the data
         </Text>
       </Flex>
     );

@@ -6,7 +6,6 @@ import { initReactI18next } from "react-i18next";
 export const supportedLngs = {
     en: "English",
     de: "Deutsch",
-    ar: "arabic",
 };
 
 i18n
@@ -60,12 +59,6 @@ i18n
           select_status: "Select status",
           select_species: "Select species",
           select_sort: "Select sort"
-        },
-      },
-      // Arabic
-      ar: {
-        translation: {
-          hello_world: "مرحباً بالعالم!",
         },
       },
       de: {
