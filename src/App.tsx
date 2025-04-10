@@ -1,5 +1,4 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { useTranslation } from "react-i18next";
 import { useQuery, gql } from '@apollo/client';
 import Card from './components/Card';
 import {
@@ -41,7 +40,6 @@ const filterOptions = {
 
 
 export default function App() {
-  const { t } = useTranslation();
   const [filters, setFilters] = useState({ status: '', species: '', sort: '' });
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
@@ -79,25 +77,40 @@ export default function App() {
                 info: fetchMoreResult.characters.info,
                 results: [...prev.characters.results, ...fetchMoreResult.characters.results],
               },
+              
             };
           },
         });
+
       }
     });
-    if (node) observer.current.observe(node);
-  }, [loading, data, fetchMore, variables]);
+    if (node){
+      observer.current.observe(node);
+    } 
+  }, [loading, fetchMore, variables]);
 
   const sortedResults = useMemo(() => {
-    if (!data?.characters.results) {
-      return [];
-    }
-    const sorted = [...data.characters.results];
+    if (!data?.characters.results) return [];
+  
+    const uniqueChars = new Map();
+    data.characters.results.forEach((char:any) => {
+      uniqueChars.set(char.id, char);
+    });
+  
+    const unique = Array.from(uniqueChars.values());
+  
     if (filters.sort === 'origin') {
-      return sorted.sort((a, b) => a.origin.name.localeCompare(b.origin.name));
+      return unique.sort((a, b) => a.origin.name.localeCompare(b.origin.name));
     }
-    if (filters.sort === 'name') return sorted.sort((a, b) => a.name.localeCompare(b.name));
-    return sorted;
+  
+    if (filters.sort === 'name') {
+      return unique.sort((a, b) => a.name.localeCompare(b.name));
+    }
+  
+    return unique;
   }, [data, filters.sort]);
+  
+  
 
   if (loading && !data?.characters) {
     return (
@@ -139,7 +152,7 @@ export default function App() {
       <LocaleSwitcher></LocaleSwitcher>
       </Flex>
       <Flex justify="center" align="center" direction="column">
-        <SimpleGrid columns={[2, null, 3]} gap="20px">
+        <SimpleGrid columns={[3]} gap="20px">
           {sortedResults.map((character, index) => (
             <Box
               key={character.id}
